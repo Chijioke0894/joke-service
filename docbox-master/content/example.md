@@ -116,219 +116,164 @@ curl http://localhost:3000/categories
 ["music", "engineering"]
 ```
 
-### Delete a wobble
+### Retrieve all jokes for a category
 
-Deletes a wobble, including all wibbles it contains.
+Returns all jokes in a category.
 
 ```endpoint
-DELETE /wobbles/v1/{username}/{wobble_id}
+GET jokes/:category
 ```
+
+Retrieve information about an existing wobble.
 
 #### Example request
 
 ```curl
-curl -X DELETE https://wobble.biz/wobbles/v1/{username}/{wobble_id}
-```
-
-```bash
-$ wbl wobble delete-wobble wobble-id
-```
-
-```python
-resp = wobbles.delete_wobble(wobble_id)
-```
-
-```javascript
-client.deleteWobble("wobble-id", function (err) {
-  if (!err) console.log("deleted!");
-});
-```
-
-#### Example response
-
-> HTTP 204
-
-### List wibbles
-
-List all the wibbles in a wobble. The response body will be a
-WobbleCollection.
-
-```endpoint
-GET /wobbles/v1/{username}/{wobble_id}/wibbles
-```
-
-#### Example request
-
-```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles
-```
-
-```bash
-$ wbl wobble list-wibbles wobble-id
-```
-
-```python
-collection = wobbles.list_wibbles(wobble_id).json()
-```
-
-```javascript
-client.listWobbles("wobble-id", {}, function (err, collection) {
-  console.log(collection);
-});
+curl http://localhost:3000/jokes/music
 ```
 
 #### Example response
 
 ```json
 {
-  "type": "Wobble",
-  "wibbles": [
-    {
-      "id": "{wibble_id}",
-      "type": "Wobble",
-      "properties": {
-        "prop0": "value0"
-      }
-    },
-    {
-      "id": "{wibble_id}",
-      "type": "Wobble",
-      "properties": {
-        "prop0": "value0"
-      }
-    }
-  ]
+  "id": 1,
+  "category": "music",
+  "joke": "How do you make a bandstand? Take away their chairs",
+  "like_count": 0,
+  "dislike_count": 0
 }
 ```
 
-### Insert or update a wibble
+### Retrieve a joke by id
 
-Inserts or updates a wibble in a wobble. If there's already a wibble
-with the given ID in the wobble, it will be replaced. If there isn't
-a wibble with that ID, a new wibble is created.
+Returns a joke by its id number
 
 ```endpoint
-PUT /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
+GET jokes/:id
+```
+
+Retrieve information about an existing wobble.
+
+#### Example request
+
+```curl
+curl http://localhost:3000/jokes/1
+```
+
+#### Example response
+
+```json
+{
+  "id": 1,
+  "category": "music",
+  "joke": "How do you make a bandstand? Take away their chairs",
+  "like_count": 0,
+  "dislike_count": 0
+}
+```
+
+### Add A new Joke to a category
+
+Creates a new joke in a named category.
+
+```endpoint
+POST /jokes
 ```
 
 #### Example request
 
 ```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id} \
-  -X PUT \
-  -d @file.geojson
+curl -X POST https://localhost:3000/jokes
 ```
 
 ```bash
-$ wbl wobble put-wibble wobble-id wibble-id 'geojson-wibble'
-```
-
-```javascript
-var wibble = {
-  type: "Wobble",
-  properties: { name: "Null Island" },
-};
-client.insertWobble(wibble, "wobble-id", function (err, wibble) {
-  console.log(wibble);
-});
+$ wbl wobbles create
 ```
 
 #### Example request body
 
 ```json
 {
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
+  "category": "engineering"
+  "joke": "Architects are just engineers who can't do math"
 }
-```
-
-| Property | Description                                |
-| -------- | ------------------------------------------ |
-| `id`     | the id of an existing wibble in the wobble |
-
-#### Example response
-
-```json
-{
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
-}
-```
-
-### Retrieve a wibble
-
-Retrieves a wibble in a wobble.
-
-```endpoint
-GET /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-#### Example request
-
-```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-```bash
-$ wbl wobble read-wibble wobble-id wibble-id
-```
-
-```javascript
-client.readWobble("wibble-id", "wobble-id", function (err, wibble) {
-  console.log(wibble);
-});
-```
-
-```python
-wibble = wobbles.read_wibble(wobble_id, '2').json()
 ```
 
 #### Example response
 
 ```json
 {
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
+  "message": "Joke added successfully",
+  "id": 3
 }
 ```
 
-### Delete a wibble
+### Add an existing joke to a category by id
 
-Removes a wibble from a wobble.
+Updates an existing joke to a new category.
 
 ```endpoint
-DELETE /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
+PUT /jokes/:id/category
 ```
 
 #### Example request
 
-```javascript
-client.deleteWobble("wibble-id", "wobble-id", function (err, wibble) {
-  if (!err) console.log("deleted!");
-});
-```
-
 ```curl
-curl -X DELETE https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-```python
-resp = wobbles.delete_wibble(wobble_id, wibble_id)
+curl -X POST https://localhost:3000/jokes/3/category
 ```
 
 ```bash
-$ wbl wobble delete-wibble wobble-id wibble-id
+$ wbl wobbles create
+```
+
+#### Example request body
+
+```json
+{
+  "id": 3
+  "category": "music"
+}
 ```
 
 #### Example response
 
-> HTTP 204
+```json
+{
+  "message": "Joke 3 updated with category music"
+}
+```
+
+### Give a joke by id a a vote of like or dislike
+
+Gives a joke a vote.
+
+```endpoint
+PUT /jokes/:id/vote
+```
+
+#### Example request
+
+```curl
+curl -X POST https://localhost:3000/jokes/3/vote
+```
+
+```bash
+$ wbl wobbles create
+```
+
+#### Example request body
+
+```json
+{
+  "id": 3
+  "vote": "like"
+}
+```
+
+#### Example response
+
+```json
+{
+  "message": "Vote recorded for joke 3"
+}
+```
